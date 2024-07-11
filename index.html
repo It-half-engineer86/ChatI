@@ -3,80 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Chat Website</title>
-   <style>
-     /* Updated styling for the chat container */
-.chat-container {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Updated style for chat messages */
-.chat-messages {
-    max-height: 400px;
-    overflow-y: auto;
-    padding: 10px;
-}
-
-/* Styling for individual chat messages */
-.message {
-    margin-bottom: 10px;
-    padding: 8px 12px;
-    border-radius: 8px;
-    max-width: 70%;
-}
-
-.sent {
-    background-color: #007bff;
-    color: white;
-    align-self: flex-end;
-}
-
-.received {
-    background-color: #f0f0f0;
-    color: #333;
-    align-self: flex-start;
-}
-
-/* Updated input and button styling */
-.chat-input {
-    display: flex;
-    align-items: center;
-    margin-top: 20px;
-}
-
-#message-input {
-    flex: 1;
-    padding: 10px;
-    margin-right: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-#send-button {
-    padding: 10px 16px;
-    border: none;
-    border-radius: 4px;
-    background-color: #007bff;
-    color: white;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-#send-button:hover {
-    background-color: #0056b3;
-}
-   </style>
+    <title>Ultra Advanced Chat</title>
+    <style>
+        /* Basic styling for demonstration */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .chat-container {
+            width: 400px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .chat-header {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .chat-messages {
+            height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        .message {
+            margin-bottom: 10px;
+        }
+        .message .user {
+            font-weight: bold;
+        }
+        .message .time {
+            font-size: 0.8em;
+            color: #888;
+        }
+        .chat-input {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+        }
+        .chat-input input[type="text"] {
+            flex: 1;
+            padding: 8px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .chat-input button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+        .chat-input button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-    <div class="chat-container" id="chat-container">
+    <div class="chat-container">
+        <div class="chat-header">
+            Ultra Advanced Chat
+        </div>
         <div class="chat-messages" id="chat-messages">
-            <!-- Messages will be appended here -->
+            <!-- Messages will be dynamically added here -->
         </div>
         <div class="chat-input">
             <input type="text" id="message-input" placeholder="Type your message...">
@@ -84,42 +87,82 @@
         </div>
     </div>
 
+    <!-- JavaScript for handling chat functionality -->
     <script>
-      // Function to get current timestamp in HH:MM format
-function getCurrentTime() {
-    const now = new Date();
-    return now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-}
+        // Function to generate a random user ID (for demonstration)
+        function generateUserId() {
+            return Math.random().toString(36).substr(2, 9); // Generate a random alphanumeric ID
+        }
 
-// Function to send a message
-function sendMessage() {
-    const messageInput = document.getElementById('message-input');
-    const messageText = messageInput.value.trim();
-    
-    if (messageText !== '') {
-        const messageElement = document.createElement('div');
-        messageElement.classList.add('message', 'sent');
-        messageElement.innerHTML = `
-            <p>${messageText}</p>
-            <span class="message-time">${getCurrentTime()}</span>
-        `;
-        
-        document.getElementById('chat-messages').appendChild(messageElement);
-        document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
-        
-        messageInput.value = '';
-    }
-}
+        // Function to get messages from localStorage
+        function getStoredMessages() {
+            return JSON.parse(localStorage.getItem('chatMessages')) || [];
+        }
 
-// Event listener for send button
-document.getElementById('send-button').addEventListener('click', sendMessage);
+        // Function to save messages to localStorage
+        function saveMessages(messages) {
+            localStorage.setItem('chatMessages', JSON.stringify(messages));
+        }
 
-// Event listener for Enter key
-document.getElementById('message-input').addEventListener('keydown', function(event) {
-    if (event.key === 'Enter') {
-        sendMessage();
-    }
-});
+        // Display stored messages on page load
+        function displayStoredMessages() {
+            const messages = getStoredMessages();
+            messages.forEach(message => displayMessage(message));
+        }
+
+        // Function to display a new message
+        function displayMessage(message) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            messageElement.innerHTML = `
+                <span class="user">${message.user}</span>
+                <span class="time">${message.time}</span><br>
+                <span>${message.text}</span>
+            `;
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
+        }
+
+        // Function to send a new message
+        function sendMessage() {
+            const text = messageInput.value.trim();
+            if (text !== '') {
+                const userId = generateUserId(); // Generate a unique user ID
+                const message = {
+                    userId: userId,
+                    user: 'You', // Replace with actual user name or ID
+                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                    text: text
+                };
+                displayMessage(message);
+                saveMessage(message);
+                messageInput.value = '';
+            }
+        }
+
+        // Function to save a message to localStorage
+        function saveMessage(message) {
+            const messages = getStoredMessages();
+            messages.push(message);
+            saveMessages(messages);
+        }
+
+        const chatMessages = document.getElementById('chat-messages');
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-button');
+
+        // Display stored messages on page load
+        displayStoredMessages();
+
+        // Event listener for send button
+        sendButton.addEventListener('click', sendMessage);
+
+        // Optional: Event listener for Enter key
+        messageInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
     </script>
 </body>
 </html>
